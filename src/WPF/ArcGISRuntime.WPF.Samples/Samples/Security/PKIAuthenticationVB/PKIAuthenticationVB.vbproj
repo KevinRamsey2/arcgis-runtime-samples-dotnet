@@ -111,10 +111,6 @@
     <Compile Include="My Project\AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="My Project\MyExtensions\MyWpfExtension.vb">
-      <VBMyExtensionTemplateID>Microsoft.VisualBasic.WPF.MyExtension</VBMyExtensionTemplateID>
-      <VBMyExtensionTemplateVersion>1.0.0.0</VBMyExtensionTemplateVersion>
-    </Compile>
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -139,6 +135,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="My Project\MyExtensions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Import Project="..\..\..\..\..\..\packages\Esri.ArcGISRuntime.WPF.100.0.0\build\net452\Esri.ArcGISRuntime.WPF.targets" Condition="Exists('..\..\..\..\..\..\packages\Esri.ArcGISRuntime.WPF.100.0.0\build\net452\Esri.ArcGISRuntime.WPF.targets')" />

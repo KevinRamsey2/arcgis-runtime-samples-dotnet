@@ -16,7 +16,7 @@ Imports Esri.ArcGISRuntime.Security
 
 Class MainWindow
     'TODO - Add the URL for your PKI-secured portal
-    Const SecuredPortalUrl As String = ""
+    Const SecuredPortalUrl As String = "https://my.secure.portal.com/gis"
 
     'TODO - Add the URL for a portal containing public content (ArcGIS Organization, e.g.)
     Const PublicPortalUrl As String = "http://esrihax.maps.arcgis.com"

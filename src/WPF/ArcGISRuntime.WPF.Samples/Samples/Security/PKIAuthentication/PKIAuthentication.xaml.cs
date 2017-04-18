@@ -24,7 +24,7 @@ namespace PKIAuthentication
     public partial class MainWindow : Window
     {
         //TODO - Add the URL for your PKI-secured portal
-        const string SecuredPortalUrl = ""; 
+        const string SecuredPortalUrl = "https://my.secure.portal.com/gis"; 
 
         //TODO - Add the URL for a portal containing public content (ArcGIS Organization, e.g.)
         const string PublicPortalUrl = "http://esrihax.maps.arcgis.com";
@@ -41,10 +41,10 @@ namespace PKIAuthentication
             InitializeComponent();
 
             // Set up the AuthenticationManager to prompt the user for a client certificate when a secured service is encountered
-            AuthenticationManager.Current.ChallengeHandler = new ChallengeHandler(CreateCredentialAsync);
+            AuthenticationManager.Current.ChallengeHandler = new ChallengeHandler(CreateCredential);
         }
 
-        public async Task<Credential> CreateCredentialAsync(CredentialRequestInfo info)
+        public Task<Credential> CreateCredential(CredentialRequestInfo info)
         {
             // Handle challenges for a secured resource by prompting for a client certificate
             Credential credential = null;
@@ -57,7 +57,7 @@ namespace PKIAuthentication
                 if (credential.ServiceUri.AbsoluteUri.StartsWith(SecuredPortalUrl))
                 {
                     // Return the CertificateCredential for the secured portal
-                    return credential;
+                    return Task.FromResult(credential);
                 }
             }
             // END: workaround             
@@ -92,7 +92,7 @@ namespace PKIAuthentication
             }
 
             // Return the CertificateCredential for the secured portal
-            return credential;
+            return Task.FromResult(credential);
         }
 
         // Search the public portal for web maps and display the results in a list box

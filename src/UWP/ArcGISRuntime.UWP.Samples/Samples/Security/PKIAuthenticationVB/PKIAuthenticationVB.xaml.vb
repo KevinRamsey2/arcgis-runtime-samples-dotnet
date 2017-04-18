@@ -10,15 +10,11 @@
 Option Strict On
 Imports Esri.ArcGISRuntime.Mapping
 Imports Esri.ArcGISRuntime.Portal
-Imports System
-Imports System.Linq
 Imports System.Text
 Imports Windows.Security.Cryptography.Certificates
 Imports Windows.Storage
 Imports Windows.Storage.Pickers
 Imports Windows.Storage.Streams
-Imports Windows.UI.Xaml
-Imports Windows.UI.Xaml.Controls
 
 ' Important:
 '    You must add the "Private Networks" capability to use Public Key Infrastructure (PKI) authentication

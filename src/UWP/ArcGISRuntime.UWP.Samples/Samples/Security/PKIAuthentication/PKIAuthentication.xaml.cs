@@ -14,7 +14,6 @@ using System.Linq;
 using System.Text;
 using Windows.Security.Cryptography.Certificates;
 using Windows.Storage;
-using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;

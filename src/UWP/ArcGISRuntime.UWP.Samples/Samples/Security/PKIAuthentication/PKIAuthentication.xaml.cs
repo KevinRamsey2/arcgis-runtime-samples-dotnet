@@ -32,10 +32,10 @@ namespace PKIAuthentication
 
         //TODO - Add the URL for a portal containing public content (ArcGIS Organization, e.g.)
         private const string PublicPortalUrl = "http://esrihax.maps.arcgis.com";
+        
+        private const string CertificateFileName = "MyCert.pfx";
 
-        // Variables to store the encrypted certificate data and friendly name
-        private string _certificateString;
-        private string _certificateName;
+        private const string MyCertPassword = "";
 
         // Variables to point to public and secured portals
         ArcGISPortal _pkiSecuredPortal = null;
@@ -47,79 +47,50 @@ namespace PKIAuthentication
         public MainPage()
         {
             InitializeComponent();
+
+            // Load a client certificate for the PKI-secured server
+            LoadCertificate();
         }
 
-        // Click handler for the LoadClientCertButton button that allows the user to choose a certificate file (.pfx)
-        private async void ChooseCertificateFile(object sender, RoutedEventArgs e)
+        private async void LoadCertificate()
         {
-            // Create a file picker dialog so the user can select an exported certificate (*.pfx)
-            var pfxFilePicker = new FileOpenPicker();
-            pfxFilePicker.FileTypeFilter.Add(".pfx");
-            pfxFilePicker.CommitButtonText = "Open";
-
-            // Show the dialog and get the selected file (if any)
-            StorageFile pfxFile = await pfxFilePicker.PickSingleFileAsync();
-
-            // If a file was selected, store the encrypted data in a string
-            if (pfxFile != null)
+            try
             {
-                // Use the file's display name for the certificate name
-                _certificateName = pfxFile.DisplayName;
+                var certificateFile = await StorageFile.GetFileFromApplicationUriAsync(new Uri(@"ms-appx:///Assets/" + CertificateFileName));
 
                 // Read the contents of the file
-                IBuffer buffer = await FileIO.ReadBufferAsync(pfxFile);
+                IBuffer buffer = await FileIO.ReadBufferAsync(certificateFile);
+                var certificateString = string.Empty;
                 using (DataReader dataReader = DataReader.FromBuffer(buffer))
                 {
                     // Store the contents of the file as an encrypted string
                     // The string will be imported as a certificate when the user enters the password
                     byte[] bytes = new byte[buffer.Length];
                     dataReader.ReadBytes(bytes);
-                    _certificateString = Convert.ToBase64String(bytes);
+                    certificateString = Convert.ToBase64String(bytes);
                 }
 
-                // Show the certificate password box (and hide the map search controls)
-                LoginPanel.Visibility = Visibility.Visible;
-                LoadMapPanel.Visibility = Visibility.Collapsed;
-            }
-        }
-
-        // Load a client certificate for accessing a PKI-secured server 
-        private async void LoadClientCertButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Show the progress bar and a message
-            ProgressStatus.Visibility = Visibility.Visible;
-            MessagesTextBlock.Text = "Loading certificate ...";
-
-            try
-            {
                 // Import the certificate by providing: 
                 //   -the encoded certificate string, 
                 //   -the password (entered by the user)
                 //   -certificate options (export, key protection, install)
                 //   -a friendly name (the name of the pfx file)
                 await CertificateEnrollmentManager.ImportPfxDataAsync(
-                    _certificateString,
-                    CertPasswordBox.Password,
+                    certificateString,
+                    MyCertPassword,
                     ExportOption.Exportable,
                     KeyProtectionLevel.NoConsent,
                     InstallOptions.None,
-                    _certificateName);
+                    certificateFile.DisplayName);
 
-                // Report success
-                MessagesTextBlock.Text = "Client certificate was successfully imported";
+                MessagesTextBlock.Text = "Certificate " + CertificateFileName + " loaded.";
             }
             catch (Exception ex)
             {
                 // Report error
                 MessagesTextBlock.Text = "Error loading certificate: " + ex.Message;
             }
-            finally
-            {
-                // Hide progress bar and the password controls
-                ProgressStatus.Visibility = Visibility.Collapsed;
-                HideCertLogin(null, null);
-            }
-        }
+        }        
 
         // Search the public portal for web maps and display the results in a list box.
         private async void SearchPublicMapsButton_Click(object sender, RoutedEventArgs e)
@@ -164,7 +135,7 @@ namespace PKIAuthentication
                 MessagesTextBlock.Text = ex.Message;
             }
         }
-        
+
         // Search the portal for web maps
         private async void SearchPortal(ArcGISPortal currentPortal)
         {
@@ -272,14 +243,6 @@ namespace PKIAuthentication
                 // Show messages
                 MessagesTextBlock.Text = messageBuilder.ToString();
             }
-        }
-
-        // Hide the password entry controls for importing a certificate from file
-        private void HideCertLogin(object sender, RoutedEventArgs e)
-        {
-            // Hide the certificate password box (and show the map search controls)
-            LoginPanel.Visibility = Visibility.Collapsed;
-            LoadMapPanel.Visibility = Visibility.Visible;
-        }
+        }        
     }
 }

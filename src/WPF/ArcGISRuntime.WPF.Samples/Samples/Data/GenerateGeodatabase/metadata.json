@@ -1,0 +1,18 @@
+{
+  "Name": "Generate geodatabase",
+  "SampleName": "GenerateGeodatabase",
+  "Description": "This sample generates and downloads a geodatabase from a feature service.",
+  "Instructions": "Pan and zoom to the area you want to download features for. Make sure the area is within the red block. Tap on the generate button to start the process. The features from the geodatabase are displayed in the map when the download completes. Since editing and data synchronization are not used in the app, the recommended best practice of unregistering the geodatabase is followed.",
+  "Type": 0,
+  "RequiresOnlineConnection": true,
+  "RequiresOfflineData": false,
+  "RequiresLocalServer": false,
+  "Image": "GenerateGeodatabase.jpg",
+  "Link": "",
+  "TypeLink": [
+    "T:Esri.ArcGISRuntime.Tasks.Offline.GenerateGeodatabaseJob",
+    "T:Esri.ArcGISRuntime.Data.Geodatabase",
+    "T:Esri.ArcGISRuntime.Tasks.Offline.GenerateGeodatabaseParameters",
+    "M:Esri.ArcGISRuntime.Tasks.Offline.GeodatabaseSyncTask.GenerateGeodatabase(Esri.ArcGISRuntime.Tasks.Offline.GenerateGeodatabaseParameters, string)"
+  ]
+}

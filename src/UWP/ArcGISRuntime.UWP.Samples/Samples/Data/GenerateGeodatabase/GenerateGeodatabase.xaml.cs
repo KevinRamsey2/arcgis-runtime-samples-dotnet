@@ -1,4 +1,4 @@
-﻿// Copyright 2017 Esri.
+﻿// Copyright 2016 Esri.
 //
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
@@ -16,12 +16,11 @@ using Esri.ArcGISRuntime.Tasks.Offline;
 using Esri.ArcGISRuntime.UI;
 using System;
 using System.Linq;
-using System.Windows;
-using System.Windows.Media;
+using Windows.UI;
 
-namespace ArcGISRuntime.WPF.Samples.GenerateGeodatabase
+namespace ArcGISRuntime.UWP.Samples.GenerateGeodatabase
 {
-    public partial class GenerateGeodatabase
+    public sealed partial class GenerateGeodatabase
     {
         // URI endpoint for a feature service that supports generating geodatabase
         private Uri _featureServiceUri = new Uri("https://sampleserver6.arcgisonline.com/arcgis/rest/services/Sync/WildfireSync/FeatureServer");
@@ -34,7 +33,7 @@ namespace ArcGISRuntime.WPF.Samples.GenerateGeodatabase
 
         public GenerateGeodatabase()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
             // Create the map and extent rectangle to show in the map view
             Initialize();
@@ -61,7 +60,7 @@ namespace ArcGISRuntime.WPF.Samples.GenerateGeodatabase
 
             // Add graphics overlay to the map view
             MyMapView.GraphicsOverlays.Add(extentOverlay);
-          
+
             // Set up an event handler for when the viewpoint (extent) changes
             MyMapView.ViewpointChanged += MapViewExtentChanged;
         }
@@ -70,7 +69,7 @@ namespace ArcGISRuntime.WPF.Samples.GenerateGeodatabase
         {
             // Get the updated extent for the new viewpoint
             Envelope extent = MyMapView.GetCurrentViewpoint(ViewpointType.BoundingGeometry).TargetGeometry as Envelope;
-            
+
             // Return if extent is null 
             if (extent == null) { return; }
 
@@ -80,7 +79,7 @@ namespace ArcGISRuntime.WPF.Samples.GenerateGeodatabase
 
             // Get the (only) graphics overlay in the map view (make sure it exists)
             var extentOverlay = MyMapView.GraphicsOverlays.FirstOrDefault();
-            if(extentOverlay == null)
+            if (extentOverlay == null)
             {
                 return;
             }
@@ -101,11 +100,11 @@ namespace ArcGISRuntime.WPF.Samples.GenerateGeodatabase
             }
         }
 
-        private async void GenerateGdbClick(object sender, System.Windows.RoutedEventArgs e)
+        private async void GenerateGdbClick(object sender, EventArgs e)
         {
             // Create a task for generating a geodatabase (GeodatabaseSyncTask)
             GeodatabaseSyncTask gdbSyncTask = await GeodatabaseSyncTask.CreateAsync(_featureServiceUri);
-            
+
             // Get the current extent of the map view
             Envelope extent = MyMapView.GetCurrentViewpoint(ViewpointType.BoundingGeometry).TargetGeometry as Envelope;
 
@@ -130,13 +129,13 @@ namespace ArcGISRuntime.WPF.Samples.GenerateGeodatabase
             JobStatus status = job.Status;
 
             // If the job completed successfully, add the geodatabase data to the map
-            if(status == JobStatus.Succeeded)
+            if (status == JobStatus.Succeeded)
             {
                 // Get the new geodatabase
                 Geodatabase resultGdb = await job.GetResultAsync();
 
                 // Loop through all feature tables in the geodatabase and add a new layer to the map
-                foreach(GeodatabaseFeatureTable table in resultGdb.GeodatabaseFeatureTables)
+                foreach (GeodatabaseFeatureTable table in resultGdb.GeodatabaseFeatureTables)
                 {
                     // Create a new feature layer for the table
                     FeatureLayer lyr = new FeatureLayer(table);
@@ -147,13 +146,13 @@ namespace ArcGISRuntime.WPF.Samples.GenerateGeodatabase
             }
 
             // See if the job failed
-            if(status == JobStatus.Failed)
+            if (status == JobStatus.Failed)
             {
                 // Create a message to show the user
                 string message = "Generate geodatabase job failed";
 
                 // Show an error message (if there is one)
-                if(job.Error != null)
+                if (job.Error != null)
                 {
                     message += ": " + job.Error.Message;
                 }
@@ -165,7 +164,7 @@ namespace ArcGISRuntime.WPF.Samples.GenerateGeodatabase
                 }
 
                 // Display the message to the user
-                MessageBox.Show(message);
+                //MessageBox.Show(message);
             }
         }
     }
